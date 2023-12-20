@@ -27,7 +27,5 @@ func TestCloudinaryAgentImp_SaveFile(t *testing.T) {
 	upload := NewCloudAgent(cld, ctx)
 	res, err := upload.SaveFile(mf)
 	assert.Nil(t, err)
-	t.Log(err)
 	assert.NotNil(t, res)
-	t.Log(res)
 }

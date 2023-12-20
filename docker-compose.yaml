@@ -1,6 +1,19 @@
 version: '3'
 services:
 
+  app:
+    container_name: file-upload
+    build: .
+    ports: 
+      - 8000:8000
+    restart: on-failure
+    volumes:
+      - .:/app
+    depends_on:
+      - mongo
+    networks:
+      - mynet
+
   mongo:
     image: mongo
     container_name: mongodb
@@ -16,7 +29,7 @@ services:
 
 volumes:
   mongodb:
-  redisDB:
+
 
 networks:
   mynet:
