@@ -2,7 +2,6 @@ package services
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/joey1123455/file-upload/models"
@@ -16,7 +15,8 @@ type FileDB interface {
 		FileType, Etag, Bytes, Version, Signature string,
 	) (*mongo.InsertOneResult, error)
 
-	RetrieveAll() ([]*models.ResorceObject, error)
+	RetrieveAll() ([]models.ResorceObject, error)
+	RetrieveOne(fileName string) (*models.ResorceObject, error)
 }
 
 type FileDBImp struct {
@@ -62,21 +62,30 @@ func (fdb FileDBImp) SaveFile(
 	return res, err
 }
 
-func (fdb FileDBImp) RetrieveAll() ([]*models.ResorceObject, error) {
-	files := make([]*models.ResorceObject, 0)
-	cur, err := fdb.collection.Find(context.Background(), bson.M{})
+func (fdb FileDBImp) RetrieveAll() ([]models.ResorceObject, error) {
+	files := make([]models.ResorceObject, 0)
+	cur, err := fdb.collection.Find(fdb.ctx, bson.M{})
 	if err != nil {
 		return nil, err
 	}
 	defer cur.Close(context.Background())
 	for cur.Next(context.Background()) {
-		var elem *models.ResorceObject
-		err := cur.Decode(elem)
+		var elem models.ResorceObject
+		err := cur.Decode(&elem)
 		if err != nil {
 			return nil, err
 		}
 		files = append(files, elem)
 	}
-	fmt.Println(files)
 	return files, nil
+}
+
+func (fdb FileDBImp) RetrieveOne(fileName string) (*models.ResorceObject, error) {
+	var file *models.ResorceObject
+	query := bson.M{"file_name": fileName}
+	err := fdb.collection.FindOne(fdb.ctx, query).Decode(&file)
+	if err != nil {
+		return nil, err
+	}
+	return file, err
 }

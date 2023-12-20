@@ -22,7 +22,7 @@ func NewUploadController(cloud services.CloudinaryAgent, coll services.FileDB) U
 }
 
 func (uc UploadController) UploadFiles(c *gin.Context) {
-	file, _, err := c.Request.FormFile("file")
+	file, header, err := c.Request.FormFile("file")
 
 	// The file cannot be received.
 	if err != nil {
@@ -42,12 +42,12 @@ func (uc UploadController) UploadFiles(c *gin.Context) {
 	}
 	fmt.Println(res)
 	_, err = uc.fileService.SaveFile(
-		res.SecureURL, res.VersionID, res.URL, res.PublicID, res.OriginalFilename,
+		res.SecureURL, res.VersionID, res.URL, res.PublicID, header.Filename,
 		res.AssetID, res.Format, res.Etag, fmt.Sprint(res.Bytes), fmt.Sprint(res.Version), res.Signature,
 	)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"message": err,
+			"message": err.Error(),
 		})
 		return
 	}
@@ -57,6 +57,28 @@ func (uc UploadController) UploadFiles(c *gin.Context) {
 
 }
 
-func (UploadController) GetUploadedFiles(c *gin.Context) {}
+func (uc UploadController) GetUploadedFiles(c *gin.Context) {
+	resoure, err := uc.fileService.RetrieveOne(c.Param("file-name"))
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"file": resoure.URL,
+	})
+}
 
-func (UploadController) ListUploadedFiles(c *gin.Context) {}
+func (uc UploadController) ListUploadedFiles(c *gin.Context) {
+	files, err := uc.fileService.RetrieveAll()
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"files": files,
+	})
+}

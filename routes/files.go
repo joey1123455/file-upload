@@ -19,4 +19,5 @@ func (rc *UploadRouter) Initiate(rg *gin.RouterGroup) {
 	router := rg.Group("/files")
 
 	router.POST("/upload", rc.controller.UploadFiles)
+	router.GET("/retrieve-all", rc.controller.ListUploadedFiles)
 }
