@@ -75,7 +75,8 @@ func (fdb FileDBImp) RetrieveAll() ([]models.ResorceObject, error) {
 		if err != nil {
 			return nil, err
 		}
-		files = append(files, elem)
+		filteredElem := models.FilteredResponse(&elem)
+		files = append(files, filteredElem)
 	}
 	return files, nil
 }
@@ -87,5 +88,6 @@ func (fdb FileDBImp) RetrieveOne(fileName string) (*models.ResorceObject, error)
 	if err != nil {
 		return nil, err
 	}
-	return file, err
+	filteredFile := models.FilteredResponse(file)
+	return &filteredFile, err
 }

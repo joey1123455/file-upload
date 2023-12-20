@@ -57,8 +57,8 @@ func (uc UploadController) UploadFiles(c *gin.Context) {
 
 }
 
-func (uc UploadController) GetUploadedFiles(c *gin.Context) {
-	resoure, err := uc.fileService.RetrieveOne(c.Param("file-name"))
+func (uc UploadController) GetUploadedFile(c *gin.Context) {
+	resource, err := uc.fileService.RetrieveOne(c.Param("file-name"))
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
@@ -66,7 +66,8 @@ func (uc UploadController) GetUploadedFiles(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"file": resoure.URL,
+		"file_url": resource.URL,
+		"file":     resource,
 	})
 }
 

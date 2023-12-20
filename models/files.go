@@ -16,3 +16,14 @@ type ResorceObject struct {
 	Version   string    `json:"version" bson:"version"`
 	Signature string    `json:"signature" bson:"signature"`
 }
+
+func FilteredResponse(res *ResorceObject) ResorceObject {
+	return ResorceObject{
+		Version:  res.Version,
+		URL:      res.URL,
+		PublicID: res.PublicID,
+		FileType: res.FileType,
+		Bytes:    res.Bytes,
+		FileName: res.FileName,
+	}
+}
