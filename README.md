@@ -11,7 +11,7 @@ Before you can run this application, you need to have the following installed on
 - **Make:** Make is a build automation tool that automatically builds executable programs and libraries from source code by reading files called Makefiles. It's typically available on Unix-based systems. If you're on Windows, you can install it through a package manager like Chocolatey.
 - **Go:** Go is an open-source programming language that makes it easy to build simple, reliable, and efficient software.
 - **Gin:** Gin is a web framework written in Go. It features a martini-like API with much better performance, up to 40 times faster thanks to httprouter. If you need performance and good productivity.
-- **MongoDB:** MongoDB, also known as Postgres, is a free and open-source relational database management system. It emphasizes extensibility and NoSQL compliance.
+- **MongoDB:** MongoDB, also known as Mongo, is a free and open-source document database management system. It emphasizes extensibility and NoSQL compliance.
 
 ### Installing
 #### Clone the repository:
